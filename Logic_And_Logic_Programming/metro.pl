@@ -29,3 +29,14 @@ not_too_far(X,Y):- connected(X, Z, L), connected(Z,Y,L).
 
 % Connected stations with one station in between different line
 not_too_far(X,Y):- connected(X, Z, _L1), connected(Z,Y,_L2), X \= Y.
+
+% non-recursive definition 
+reachable(X,Y):-connected(X,Y,L).
+reachable(X,Y):-connected(X,Z,L1),connected(Z,Y,L2).
+reachable(X,Y):-connected(X,Z1,L1),connected(Z1,Z2,L2),
+                connected(Z2,Y,L3).
+
+% recursive definition
+reachable(X,Y):-connected(X,Y,_L).
+reachable(X,Y):-connected(X,Z,L),
+                reachable(Z,Y). % recursive call to find a connection from Z To Y 
