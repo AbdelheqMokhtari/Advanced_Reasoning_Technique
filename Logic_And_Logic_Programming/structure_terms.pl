@@ -12,6 +12,6 @@ connected(tottenham_court_road, leicester_square, northern).
 connected(leicester_square, charing_cross, northern).
 
 % Structure terms
-reachable(X,Y,noroute):-connected(X,Y,_L).
-reachable(X,Y,route(Z,R)):-connected(X,Z,_L),
-                           reachable(Z,Y,R).
+reachable(X,Y,[]):-connected(X,Y,_L).
+reachable(X,Y,[Z|R]):-connected(X,Z,_L),
+                      reachable(Z,Y,R).
