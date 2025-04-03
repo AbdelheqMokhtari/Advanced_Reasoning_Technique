@@ -11,18 +11,21 @@ connected(piccadilly_circus, charing_cross, bakerloo).
 connected(tottenham_court_road, leicester_square, northern).
 connected(leicester_square, charing_cross, northern).
 
+% reverses connection
+connected(Y,X,L):- connected(X,Y,L).
+
+
 % Nearby stations
-nearby(X,Y):-connected(X,Y,_L).
-nearby(X,Y):-connected(X,Z,L),connected(Z,Y,L).
+nearby(X,Y):- connected(X,Y,_L).
+nearby(X,Y):- connected(X,Z,L),connected(Z,Y,L).
+
+
 
 % Directly connected stations  
 not_too_far(X,Y):- connected(X, Y, _L).
-not_too_far(X,Y):- connected(Y, X, _L).
 
 % Connected stations with one station in between same line 
 not_too_far(X,Y):- connected(X, Z, L), connected(Z,Y,L).
-not_too_far(X,Y):- connected(Y, Z, L), connected(Z,X,L).
 
 % Connected stations with one station in between different line
 not_too_far(X,Y):- connected(X, Z, _L1), connected(Z,Y,_L2), X \= Y.
-not_too_far(X,Y):- connected(Y, Z, _L1), connected(Z,X,_L2), X \= Y.
