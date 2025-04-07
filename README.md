@@ -257,7 +257,139 @@ the query `?-reachable(oxford_circus,charing_cross,R)` now has three possible an
 ```
 
 
-### 2. Clausal Logic and Resolution (Not yet covered)
+### 2. Clausal Logic and Resolution
+
+#### A. Propositional Clausal logic
+
+A proposition is any statement which is either true or false, such as `2 + 2 = 4` or `the sky is made of bubbles` this are the propositional logic, the weakest form of logic propositions are abstractly donated by atoms.
+
+**atoms**: are single words starting with lowercase character for example : .
+```prolog
+married;bachelor:-man,adult.
+% somebody is married or a bachelor if he is a man and an adult.
+head:-body.
+% that the structure of a clause in prolog head:- body
+% the head is always a disjunction (or) of atoms
+% the body is always a conjunction (and) of atoms.
+```
+**Exercise 2.1**
+Translate the following statements into clauses,using the atoms `person`, `sad` and `happy`:
+
+1. person are happy or sad;
+2. no person is both happy and sad;
+3. sad persons are not happy;
+4. non-happy persons are sad.
+
+**[Solution](Logic_And_Logic_Programming/exercise2-1.pl)**
+
+**Exercise 2.2**
+
+Give the program
+
+```prolog
+married;bachelor:-man,adult.
+man.
+:-bachelor.
+```
+
+
+determine which of the following clauses are logical consequences of this program:
+
+1. `married:-adult`;
+2. `married:-bachelor`;
+3. `bachelor:-man`;
+4. `bachelor:-bachelor`.
+
+**Solution** 
+1. True;
+2. False;
+3. False;
+4. False.
+
+**Exercise 2.3**
+
+Write down the six herbrand interpretations that are not models of the program
+
+```prolog
+married;bachelor:-man,adult.
+has_wife:-man,married.
+```
+
+**Solution**
+```prolog
+{man, adult}
+{man, adult, has_wife}
+{man, married}
+{man, married, adult}
+{man,married, bachelor}
+{man, married, adult, bachelor}
+```
+the following clause is a logical consequence of this program:
+
+```prolog
+has_wife;bachelor:-man,adult.
+```
+
+**Exercise 2.4**
+
+Give a derivation of `friendly` from the following program:
+
+```prolog
+happy;friendly:-teacher.
+friendly:-teacher,happy.
+teacher;wise.
+teacher:-wise.
+```
+
+**Solution**
+
+derivations of `friendly` are the clauses `friendly:-teacher` and `teacher`.
+
+**Syntax:** 
+
+defines the formal structure of the language used in propositional clausal logic. it specifies the symboles and rules for constructing valid expressions:
+
+1. Atoms: Basic propositional variables representing statements that can be either true or false
+   
+2. Clauses: Disjunctions of Atoms
+   
+3. Programs: Sets of clauses that collectively describe a logiacl system.
+
+**Semantics**
+
+assigns meaning to the syntactic elemnts by defining how the truth values of complex expressions depend on their components:
+
+1. The Herbrand Base: is the set of all possible ground atoms that be formed using the predicates and constants defined in a logic program e.g {woman,man,humain}
+   
+2. The Herbrand Interpretation: is a specific assignment of truth values (True or False) to all the elements of the Harband Base e.g {Woman -> True, man -> False, Humain-> True} and for convention we can just write {Woman, Humain}.
+
+there are four possibilites for the head and body of the clause:
+
+1.  the body is *true*, and the head is *true*.
+2.  the body is *true*, and the head is *false*.
+3.  the body is *false*, and the head is *true*.
+4.  the body is *false*, and the head is *false*.
+
+**Proof Theory**
+
+Provides the mechanisms for deriving new clauses(theorems) from existing ones (axioms) using inference rules.
+
+for instance, given the clauses:
+```prolog
+married; bachelor :- man, adult.
+has_wife :- man,married.
+```
+
+One can resolve them to derive
+
+```prolog
+has_wife; bechelor :- man, adult.
+```
+
+**Meta-Theory**
+
+Examines the properties and capabilities of the logical system itself, addressing quesions like (Soundness, Completeness).
+
 
 ### 3. Logic Programming and Prolog (Not yet covered)
 
@@ -327,6 +459,111 @@ true.
 | `_L`          | Anonymous variable. Ignores value. | When the value is irrelevant.        | `true.`        |
 
 Use `_L` when you only care about the existence of a connection, but use `L` when you want to **identify or compare the specific line name**.
+
+
+## ✅ Introduction to Logic Programming: Syntax, Semantics, and Proof Theory
+
+In logic programming (like Prolog), there are **three important parts** you need to understand:
+
+1. **Syntax** (What the language looks like)
+2. **Semantics** (What the language means)
+3. **Proof Theory** (How we can reason with the language)
+
+Let’s break them down in simple terms. 😊
+
+---
+
+### 📌 1. Syntax (The Structure of the Language)
+
+**Syntax** is like the **grammar and vocabulary** of a language. It defines:
+- The **symbols** you can use.
+- How to **combine these symbols** to create valid statements (also called **clauses**).
+
+#### 🔑 In Prolog, syntax includes:
+1. **Facts:** Statements that are **unconditionally true**.
+```prolog
+parent(john, mary).   % Means John is a parent of Mary
+connected(bond_street, oxford_circus, central).   % Bond Street is connected to Oxford Circus via the Central line
+```
+2. **Rules:** Statements that are **conditionally true** (depend on other facts or rules).
+```prolog
+ancestor(X, Y) :- parent(X, Y).   % If X is a parent of Y, then X is an ancestor of Y.
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).  % Recursive definition for ancestors.
+```
+3. **Queries:** Questions we ask Prolog to **find out if something is true or to find a solution**.
+```prolog
+?- parent(john, mary).  % Is John a parent of Mary?
+?- ancestor(john, sue). % Is John an ancestor of Sue?
+```
+4. **Operators:** Symbols like `:-` or `,` which have special meanings in the language.
+
+#### 📚 Summary:
+**Syntax** is about how to **write valid Prolog programs**. It tells you what kind of sentences (facts, rules, queries) you can write and how to structure them correctly.
+
+---
+
+### 📌 2. Semantics (The Meaning of the Language)
+
+**Semantics** is about the **meaning of what you write**. It defines **what is true or false** in your program.
+
+#### 🔑 In Prolog, semantics includes:
+1. **Assigning truth values:**  
+   - Prolog assigns a sentence as **true or false** depending on the facts and rules you define.
+2. **Truth-functional logic:**  
+   - The truth of a sentence depends on whether the conditions specified are **met or not**.
+
+#### 📚 Example:
+```prolog
+parent(john, mary).
+parent(mary, ann).
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+```
+- `?- ancestor(john, mary).` ✅ True
+- `?- ancestor(john, ann).` ✅ True
+- `?- ancestor(mary, john).` ❌ False
+
+#### 📚 Summary:
+**Semantics** is about understanding whether your sentences are **true or false** based on the facts and rules you have written.
+
+---
+
+### 📌 3. Proof Theory (How to Reason with the Language)
+
+**Proof Theory** is about **deriving new sentences** from the ones you already know. It’s the **process of reasoning**.
+
+#### 🔑 In Prolog, proof theory includes:
+1. **Inference Rules:**  
+   - The way Prolog uses rules to **derive conclusions**.
+2. **Axioms:**  
+   - These are your **facts and base rules**.
+3. **Theorems:**  
+   - New sentences derived from your axioms and rules.
+
+#### 📚 Example:
+```prolog
+parent(john, mary).
+parent(mary, ann).
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+?- ancestor(john, ann).
+```
+- Prolog will try to **resolve** the query using facts and rules, confirming it's true.
+
+#### 📚 Summary:
+**Proof theory** is about how Prolog **derives answers** using **facts, rules, and logical inference**.
+
+---
+
+### 🔥 Summary of All Three Parts
+
+| Aspect         | Description                                                          | Example in Prolog                                          |
+|----------------|---------------------------------------------------------------------|------------------------------------------------------------|
+| **Syntax**     | Structure and format of sentences.                                  | Facts, Rules, Queries.                                      |
+| **Semantics**  | Meaning of sentences, determining truth or falsehood.              | Whether a query succeeds or fails based on facts/rules.   |
+| **Proof Theory**| Process of deriving new knowledge from existing facts and rules. | Resolution, recursion, and inference.                     |
+
 
 ---
 
