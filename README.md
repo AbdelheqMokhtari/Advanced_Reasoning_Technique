@@ -390,6 +390,328 @@ has_wife; bechelor :- man, adult.
 
 Examines the properties and capabilities of the logical system itself, addressing quesions like (Soundness, Completeness).
 
+#### B. Relational Clausal logic
+
+is an extension of propositional clausal logic that allows us to use variables and relations (predicates) to describe complex relationships between objects.
+
+**Syntax**
+
+Now we are going talk about terms used in Relational Clausal logic :
+
+1. Constants :
+    
+    the names tha refer to specific individuals or objects they should be lowercase words or String enclosed in quotes for example : 
+    `peter, maria, 'New York'`
+
+
+2. Variables : 
+   
+   Names that refer to arbitrary individuals. They can be replace by any constant during evaluation they are UpperCase Words `X`,`Y`,`S`.
+
+3. Ground Terms : 
+   
+   Terms that do not contain variables For example `peter` is a ground term, but `S` is not.
+
+4. Predicates : 
+   
+   Relations between individuals follow the same rules as constants always followed by a number of arguments (terms) example `likes` , `student_of`.
+
+5. Atoms : 
+   
+   A predicate followed by a list of terms enclosed in brackets seperated by commas example : 
+
+   ```prolog
+    likes(peter, maria).
+    student_of(maria, peter).
+   ``` 
+
+6. Ground Atoms: 
+   
+   an atom that does not contain variables.
+
+7. Arity : 
+   
+   The number of arguments a predicate takes example
+
+   ```prolog
+    likes(peter, maria).  % Arity = 2.
+    student_of(maria, peter). % Arity = 2.
+   ```
+
+   Predicates with the same name but different arity are considered differnt.
+
+   ```prolog
+   likes/2
+   likes/1
+   ```
+
+8. Facts : 
+   
+   Statements that are unconditionally true.
+
+   ```prolog
+    student_of(maria, peter).
+   ```
+   
+9.  Rules :
+    
+    Statements that are true under certain conditions.
+    ```prolog
+    likes(peter, S) :- student_of(S, peter).
+    ```
+
+
+10. Programs: 
+    
+    A collection of facts and rules.
+
+**Semantics**
+
+We are going to focus in how Herbrand Universe, Herbrand Base, Herbrand interpretation, and Grounding Substituions work in Relational Clausal Logic.
+
+for all the points below we are going to use the following program
+
+```prolog
+Likes(peter, S):-student_of(S, peter).
+student_of(maria, peter).
+```
+1. Herbrand Universe :
+   
+   The Herbrand Universe of a program is the set of all ground terms (constants) that appear in the program.
+
+   So the herbrand Universe is:
+    ```prolog
+    {peter, maria}
+    ```
+
+2. Herbrand Base:
+   
+    The Herbrand Base is the set of all possible ground atoms that can be constructed using:
+
+   So the herbrand base is:
+    ```prolog
+    {
+        likes(peter, peter), likes(peter, maria),
+        likes(maria, peter), likes(maria, maria),
+        student_of(peter, peter), student_of(peter, maria),
+        student_of(maria, peter), student_of(maria, maria)
+    }
+    ```
+    This list includes every possible combination of predicates and constants.
+
+3. Herbrand Interpretation:
+
+    A Herbrand Interpretation is a subset of the Herbrand Base where each element is considered true.
+
+    Example : 
+
+    ```prolog
+    M = { likes(peter, maria), student_of(maria, peter) }
+    ```
+
+4. Substituation : 
+   
+    A Substitution is a mapping from variables to terms (constants or other variables).
+
+    When a substitution is applied, all occurrences of a variable are replaced by the specified term.
+
+5. Ground Substitution :
+   
+   A Grounding Substitution is a special kind of substitution that replaces all variables with constants
+
+6. Ground Instances :
+   
+   The Ground Instances of a clause are all the versions of that clause obtained by applying every possible grounding substitution over the Herbrand Universe.
+
+    ```prolog
+   likes(peter, S) :- student_of(S, peter).
+   ```
+    The Herbrand Universe is `{ peter, maria }`.
+
+    The Ground Instances of the clause:
+
+    ```prolog
+    { 
+        likes(peter, maria) :- student_of(maria, peter),
+        likes(peter, peter) :- student_of(peter, peter)
+    }   
+    ```
+
+    we applied all possible substitutions from the Herbrand Universe.
+
+7. Model for Non-Ground Clauses :
+   
+   A model for a non-ground clause is an interpretation that satisfies every ground instance of the clause.
+
+   Example: 
+
+   ```prolog
+    M = { likes(peter, maria), student_of(maria,peter)}
+   ```
+
+   check if M is a model for :
+
+   ```prolog
+   likes(peter, S) :- student_of(S, peter).
+   ```
+
+   ground instance:
+
+   ```prolog
+   likes(peter, maria) :- student_of(maria, peter).
+   likes(peter, peter) :- student_of(peter, peter).
+   ```
+
+   Interpretation *M* satisfies the first ground instance but not the second, so it is *not a model*.
+
+
+**Proof Theory**
+
+In Relational Clausal Logic, proof theory is about how we derive conclusions (proofs) from a set of facts and rules. This involves using resolution and handling variables effectively.
+
+1. Naive Proof Method (Grounding Substitutions).
+   
+   If we ground every clause before trying to apply resolution, we will have to consider all possible substitutions, This is inefficient because most substitutions will be irrelevant to the proof. If the Herbrand Universe contains four constants, a clause with two distinct variables generates 4^2=16 different grounding substitutions.`A program with three such clauses would have 16^3=4096 grounding substitutions.
+
+2. Improved Proof Method (Unification).
+   
+   Instead of generating all possible groundings, we derive substitutions directly from the clauses. This process is called unification. Two atoms can be unified if we can make them equal by substituting terms for variables. The resulting substitution is called a unifier.
+
+   example :
+
+   ```prolog
+   likes(peter, S):- student_of(S,peter).
+   student_of(maria, T):- follows(maria, C), teaches(T, C).
+   ```
+
+   the unifier : 
+
+   ```prolog
+   { S -> maria, T-> peter }
+   ```
+
+   Resulting Clauses After Applying Unifer
+
+   ```prolog
+    likes(peter, maria) :- student_of(maria, peter).
+    student_of(maria, peter) :- follows(maria, C), teaches(peter, C).
+   ```
+
+   Resolvent
+   ```prolog
+   likes(peter, maria) :- follows(maria, C), teaches(peter, C).
+   ```
+
+   We drop the resolved literal `student_of(marian peter)` and combine the remaining literals.
+
+3. Generalization of Clauses
+   
+   The previous example replaced specific constants with variables to make the rule more general.
+
+    New Program :
+
+    ```prolog
+    likes(peter, S) :- student_of(S, peter).
+    student_of(X, T) :- follows(X, C), teaches(T, C).
+    ```
+
+    This program generalizes the previous rule from maria to any individual that's help to capture a wider range of situations.
+
+4. Most General Unifier (MGU)
+   
+   Not all unifiers are equal. We prefer the most general unifier (MGU), which: Uses the fewest substitutions necessary to make atoms equal, And can be further specialized to obtain more specific unifiers.
+   
+   Example :
+
+   ```prolog
+    student_of(S, peter).
+    student_of(maria, T).
+   ```
+
+   we have two possible unifiers:
+
+   `{S -> maria, T -> peter}` - more specific.
+
+   `{S -> X, T -> peter}` - more general (X can be any value).
+
+   the second unifier is preferred because it applies to more situations 
+
+5. Proof by Refutation
+   
+   The actual proof method involves showing that a query is false by deriving a contradiction (empty clause).
+
+    Example : 
+
+    ```prolog
+    likes(peter, S) :- student_of(S, peter).
+    student_of(S, T) :- follows(S, C), teaches(T, C).
+    teaches(peter, ai_techniques).
+    follows(maria, ai_techniques).
+    ```
+
+    Query : 
+
+    ```prolog
+    :- likes(peter, N).  % "Peter likes nobody."
+    ```
+
+    Resolution Steps :
+
+    Unify `student_of(S, peter)` and `student_of(maria, T)`
+
+    ```prolog
+    { S → maria, T → peter }
+    ```
+
+    Resolve
+
+    ```prolog
+    likes(peter, maria) :- follows(maria, ai_techniques), teaches(peter, ai_techniques).
+    ```
+
+    Grounding the facts
+
+    ```prolog
+    follows(maria, ai_techniques).
+    teaches(peter, ai_techniques).
+    ```
+
+    The goal `:- likes(peter, N)` is refuted because we can derive
+
+    ```prolog
+    likes(peter, maria).   % Proves the query false (empty clause is derived).
+    ```
+
+    The substitution `{ N → maria }` is the answer to the query.
+
+    The process can be visualized using proof trees: Each step represents a resolution operation, nodes are clauses, and branches are unifiers applied.
+
+6. Multiple Answers to a Query
+
+    prolog can have multiple valid answers
+
+**Meta-Theory**
+
+Relational resolution is sound, meaning it only produces logical consequences of the input clauses, and refutation complete, meaning it always detects inconsistencies in a set of clauses. However, it is not complete, as it does not always generate every logical consequence of the input clauses. An important characteristic of relational clausal logic is that the Herbrand universe (the set of individuals we can reason about) is always finite, resulting in finite models and a finite number of different models for any program. This finiteness ensures that we can, in principle, determine whether a statement is a logical consequence of a program by enumerating all models and checking if they are also models of the statement. This guarantees termination, making relational clausal logic decidable. However, this property does not hold for full clausal logic, where the Herbrand universe can be infinite and undecidable.
+
+**Exercice 2.6**
+
+How many models does  have over the Herbrand universe `{ peter, maria }`?
+
+**Solution**
+
+number of models = 2^8 = 256 because we have 8 atoms but not all the solutions are valid 9 * 2^4 = 144 models
+
+**Exercise 2.7**
+
+Write a clause expressing that Peter teaches all the first-year courses, and apply resolution to this clause and the clause
+
+```prolog
+likes(peter,maria):-follows(maria,C),teaches(peter,C).
+```
+
+**[Solution](Logic_And_Logic_Programming/exercise2-1.pl)**
+
 
 ### 3. Logic Programming and Prolog (Not yet covered)
 
