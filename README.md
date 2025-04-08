@@ -768,7 +768,18 @@ is the foundational mechanism for query answering in Prolog. it's the method tha
 
 #### B. Pruning the search by means of cut
 
+The cut (!) is a special predicate that is used to prube the search tree. it helps control prolog's backtracking mechanism, allowing to limit the number of possible solutions or avoid unnecessary exploration of certain parts of the search space.
 
+example: 
+
+```prolog
+example_rule(X) :- condition1(X), !, condition2(X).
+```
+the cut tells prolog once this point is reached do not backtracks so when conditon1 is achieved he will check condition2 and if it's wrong he won't backtrack for the condition1 and stop
+
+in practice the cut can limit the number of solutions returned by prolog.
+
+#### C. Negation as failure
 
 
 
