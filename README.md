@@ -712,6 +712,32 @@ likes(peter,maria):-follows(maria,C),teaches(peter,C).
 
 **[Solution](Logic_And_Logic_Programming/exercise2-1.pl)**
 
+####  C. Full clausal logic
+
+Full clausal logic is an extend to the previous clausals but with Full Clausal logic it allow us to reason about infinite domains by inroducing more complex terms besides constants and variables
+
+example :
+
+```prolog
+loves(X,person_loved_by(X)).
+```
+
+**Syntax**
+
+terms can be either simple or complex. Constants and variables are simple terms. A complex terms is a functor.
+
+- The terms between brackets in functor are called the arguments of the functor.
+- All the other definitions (Atom, Clause, literal, Program) are the same as for relational clausal logic.
+   
+**Semantics**
+
+in full clausal logic involves interpreting these complex terms and their relationships. A Herbrand interpretation assigns truth values to ground atoms derived from the Herbrand base, which includes all possible ground terms and atoms formed using the predicates and constants in the program. This interpretation provides a model for reasoning about the logical consequences of a set of clauses. 
+
+**Proof Theory**
+
+full clausal logic employs unification as a central mechanism. Unification is the process of finding a substitution that makes different terms identical. This is crucial for applying inference rules like resolution, which is used to derive new clauses from existing ones. The ability to unify complex terms allows for more expressive and powerful reasoning, especially when dealing with infinite or undefined domains. 
+
+
 
 ### 3. Logic Programming and Prolog (Not yet covered)
 
