@@ -805,6 +805,27 @@ example:
   No
 ```
 
+#### D. Accumulators
+
+it's a technique used to keep track of intermediate results when performing recursive operations, particulary for operations like summing elements, finding the maximum.
+
+Recurisve rule with accumulator for summing
+```prolog
+sum_list([], 0).  % Base case: sum of an empty list is 0
+sum_list([H|T], Acc, Sum) :-
+    NewAcc is Acc + H,          % Update the accumulator
+    sum_list(T, NewAcc, Sum).   % Recurse with the tail of the list
+```
+
+Query Example:
+
+```prolog
+?- sum_list([1, 2, 3, 4], 0, Sum).
+Sum = 10.
+```
+
+
+
 
 
 
