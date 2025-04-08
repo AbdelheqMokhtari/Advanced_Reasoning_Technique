@@ -737,7 +737,21 @@ in full clausal logic involves interpreting these complex terms and their relati
 
 full clausal logic employs unification as a central mechanism. Unification is the process of finding a substitution that makes different terms identical. This is crucial for applying inference rules like resolution, which is used to derive new clauses from existing ones. The ability to unify complex terms allows for more expressive and powerful reasoning, especially when dealing with infinite or undefined domains. 
 
+####  D. Definite clausal logic
 
+is a subset of clausal logic, used primarily in Prolog. It introduces a significant efficiency improvement by restricting clauses to have at most one positive literal. This restriction reduces computational complexity and increases efficiency in reasoning systems.
+
+The main difference between DCL and full clausal logic is that DCL does not allow negative literals in the head of a clause, making it less expressive but more efficient. In contrast, full clausal logic allows negative information to be handled, which introduces complexity in resolution.
+
+A DCL clause has the form:
+
+```prolog
+Head :- Body1, Body2,..., Bodyn.
+```
+
+Where the Head is the only positive literal and the Body can consist of one or more negative literals. This restriction simplifies the procedural interpretation, where each clause is used to prove the Head by proving all Body literals.
+
+This structure allows more efficient searching and memory usage, making DCL ideal for systems like Prolog. However, to express more complex logic, negated literals can be used, leading to the transition to general clauses.
 
 ### 3. Logic Programming and Prolog (Not yet covered)
 
