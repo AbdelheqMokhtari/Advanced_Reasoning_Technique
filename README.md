@@ -779,7 +779,32 @@ the cut tells prolog once this point is reached do not backtracks so when condit
 
 in practice the cut can limit the number of solutions returned by prolog.
 
-#### C. Negation as failure
+#### C. Arithmetic Expression
+
+Prolog provides built-in predicates to handles arithmetics expressions, which allow you to perform calculations within the logical rules and queries. Arithmetic expressions in Prolog are evaluated using infix operators
+
+example:
+
+```prolog
+?-X is 5+7-3
+  X = 9
+
+? 9 is X+7-3.
+  Error in arithmetic expression
+
+? 9 is 5+7-3.
+  Yes
+
+? X is 5*3+7/2.
+  X = 18.5
+
+? X = 5+7-3.
+  X = 5+7-3
+
+? 9 = 5+7-3.
+  No
+```
+
 
 
 
