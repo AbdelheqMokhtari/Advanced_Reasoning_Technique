@@ -753,7 +753,24 @@ Where the Head is the only positive literal and the Body can consist of one or m
 
 This structure allows more efficient searching and memory usage, making DCL ideal for systems like Prolog. However, to express more complex logic, negated literals can be used, leading to the transition to general clauses.
 
-### 3. Logic Programming and Prolog (Not yet covered)
+### 3. Logic Programming and Prolog 
+
+
+#### A. SLD-Resolution
+
+is the foundational mechanism for query answering in Prolog. it's the method that Prolog uses to determine whether a query is true based on the given facts and rules.
+
+- Prolog selection rules is left to right 
+- Prolog searches the clauses in the program top-down.
+- this process is called SLD-resolution
+- S for selection rule; L for linear resolution; and D for definite clause you can see the [SLD-tree](https://book.simply-logical.space/_images/image022.svg).
+  
+
+#### B. Pruning the search by means of cut
+
+
+
+
 
 ## 🔥 Section 2: Reasoning with structured Knowledge (Not yet coverd)
 
